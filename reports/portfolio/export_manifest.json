@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "kind": "analysis_export_from_saved_results",
+  "exported_at_utc": "2026-11-01T17:51:08.211575+00:00",
+  "environment_observed_at_export": {
+    "python": "3.12.14",
+    "packages": {
+      "retail-demand-planner": "0.1.0",
+      "numpy": "2.5.4",
+      "lightgbm": "4.7.0",
+      "fastapi": "0.162.0"
+    }
+  },
+  "original_run_manifest_available": false,
+  "source_results": {
+    "bytes": 5210975,
+    "sha256": "df082af64aae13aea5c60205dd2083fd53573f26f593cdc5f847e58ed968535a"
+  },
+  "quality": {
+    "status": "passed",
+    "unique_series": 1000,
+    "observed_item_days": 56000,
+    "holdout_item_days": 28000,
+    "checks": [
+      "unique IDs",
+      "date alignment",
+      "finite nonnegative units",
+      "array lengths",
+      "holdout/history agreement",
+      "interval ordering"
+    ]
+  },
+  "sql": {
+    "category_performance.sql": {
+      "bytes": 807,
+      "sha256": "51401f086b36325347c74d11e6b3f09eb87b44ff2514f3ccd76568ea8972f232"
+    },
+    "error_review.sql": {
+      "bytes": 681,
+      "sha256": "a6066510197ce44aaf05f4a1d0b3d003aefb2bebfcb40cdaeb5063061594b571"
+    },
+    "inventory_review.sql": {
+      "bytes": 452,
+      "sha256": "973c6bae76114f35b8617f71be08d665a336bd99e42a7339a0839b8851726c3a"
+    },
+    "model_comparison.sql": {
+      "bytes": 291,
+      "sha256": "ed6b2cd0ee7e56cfb3ef148ab7062d4ab32deddb11978c1fcb97e6b8bd907be7"
+    },
+    "store_performance.sql": {
+      "bytes": 669,
+      "sha256": "99d2d44ec29d0fb0870ab4783d2a6bb661606785969568e3fdc601b4305d1819"
+    },
+    "weekday_demand.sql": {
+      "bytes": 364,
+      "sha256": "be4593e82f2f0750b90a4f04de6e719b0e038a6c0e54fd6fbe5e6e87d2f6f499"
+    },
+    "weekly_demand.sql": {
+      "bytes": 693,
+      "sha256": "261dc8bf70958d059f206f5aeb9d9b502eec5141d0800049c754033b75cc54d0"
+    }
+  },
+  "csv_rows": {
+    "category_performance": 3,
+    "error_review": 1000,
+    "inventory_review": 1000,
+    "model_comparison": 5,
+    "store_performance": 10,
+    "weekday_demand": 7,
+    "weekly_demand": 80
+  },
+  "outputs": {
+    "case_study.md": {
+      "bytes": 4306,
+      "sha256": "90819d0bff75a54532ad2596e218792b05f29f535a2a4df9eacc507d569954e7"
+    },
+    "summary.json": {
+      "bytes": 11797,
+      "sha256": "7a30b4c5f09a5d5786491d5f65f0ae2ff22d7d7267e40d53f69f7c9601025d1f"
+    },
+    "category_performance.csv": {
+      "bytes": 316,
+      "sha256": "1be63f29b119e732f8ebf2073aa374e77886277edb821f7b205ac3c03209cbbe"
+    },
+    "error_review.csv": {
+      "bytes": 122831,
+      "sha256": "b37a6085618fc265b828cc5bf5c5fd994fd3356e73f866f0c10eac0776568975"
+    },
+    "inventory_review.csv": {
+      "bytes": 68081,
+      "sha256": "c1e7c57549c86c9e21f4ec4d41d0770e7d0c68cc9ab66b88a331a34289fb3f8c"
+    },
+    "model_comparison.csv": {
+      "bytes": 439,
+      "sha256": "dd200edb753d17740fbb79693e5b3deb95be5bb95af7e3b950cc48cdb950d11e"
+    },
+    "store_performance.csv": {
+      "bytes": 806,
+      "sha256": "73c5bd24d18c5dec23901f13749d7b982da6b9632da4721723c9ee0a27a62702"
+    },
+    "weekday_demand.csv": {
+      "bytes": 233,
+      "sha256": "d2053f6e17fac0219445298f4348b81b0984db3bd7bf3b44a7e7a788fb671ad7"
+    },
+    "weekly_demand.csv": {
+      "bytes": 3964,
+      "sha256": "bedcf95f44c70859879de4801f237c6d2b1959d16b7daf62f3578cb59c742a8b"
+    }
+  },
+  "database": {
+    "bytes": 27918336,
+    "sha256": "5753736272218ea4ab6e2dfc2f906d5e39ce0662caa8cd008cdb7fe2dd24a7af"
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "segments": [
+    {
+      "level": "category",
+      "name": "FOODS",
+      "series": 446,
+      "wape": 0.6753141473916768,
+      "bias": -0.10902959937299139,
+      "coverage_80": 0.7419923126201153,
+      "recent_vs_previous_28": 0.003515329506518894
+    },
+    {
+      "level": "category",
+      "name": "HOBBIES",
+      "series": 183,
+      "wape": 1.0839097339593644,
+      "bias": -0.04731795853998163,
+      "coverage_80": 0.8356752537080406,
+      "recent_vs_previous_28": 0.02258269720101791
+    },
+    {
+      "level": "category",
+      "name": "HOUSEHOLD",
+      "series": 371,
+      "wape": 0.8159925253692446,
+      "bias": 0.026123359723038652,
+      "coverage_80": 0.8294185598767809,
+      "recent_vs_previous_28": 0.01725898692810457
+    },
+    {
+      "level": "store",
+      "name": "CA_1",
+      "series": 106,
+      "wape": 0.883964235007662,
+      "bias": -0.10752267626512073,
+      "coverage_80": 0.7564016172506739,
+      "recent_vs_previous_28": -0.0358775940907492
+    },
+    {
+      "level": "store",
+      "name": "CA_2",
+      "series": 97,
+      "wape": 0.7487156660741235,
+      "bias": -0.1322880042698177,
+      "coverage_80": 0.8000736377025037,
+      "recent_vs_previous_28": 0.12084592145015116
+    },
+    {
+      "level": "store",
+      "name": "CA_3",
+      "series": 114,
+      "wape": 0.7154382303653914,
+      "bias": -0.025690604717214367,
+      "coverage_80": 0.7706766917293233,
+      "recent_vs_previous_28": 0.05290215588723046
+    },
+    {
+      "level": "store",
+      "name": "CA_4",
+      "series": 85,
+      "wape": 0.7055792374603052,
+      "bias": -0.020393373996964767,
+      "coverage_80": 0.8210084033613445,
+      "recent_vs_previous_28": 0.04815864022662897
+    },
+    {
+      "level": "store",
+      "name": "TX_1",
+      "series": 102,
+      "wape": 0.8571139233876829,
+      "bias": 0.04937541013212685,
+      "coverage_80": 0.8336834733893558,
+      "recent_vs_previous_28": 0.03673469387755102
+    },
+    {
+      "level": "store",
+      "name": "TX_2",
+      "series": 107,
+      "wape": 0.6548270535246259,
+      "bias": 0.010294818556661424,
+      "coverage_80": 0.7600133511348465,
+      "recent_vs_previous_28": -0.07133295085102309
+    },
+    {
+      "level": "store",
+      "name": "TX_3",
+      "series": 94,
+      "wape": 0.6625149173697287,
+      "bias": -0.1622026769957065,
+      "coverage_80": 0.7879939209726444,
+      "recent_vs_previous_28": 0.02920497566252034
+    },
+    {
+      "level": "store",
+      "name": "WI_1",
+      "series": 104,
+      "wape": 0.8755691004405788,
+      "bias": -0.2039965935698302,
+      "coverage_80": 0.7891483516483516,
+      "recent_vs_previous_28": -0.07668474051123164
+    },
+    {
+      "level": "store",
+      "name": "WI_2",
+      "series": 95,
+      "wape": 0.7954282594642141,
+      "bias": -0.005485048641714664,
+      "coverage_80": 0.7845864661654135,
+      "recent_vs_previous_28": 0.04193449647995107
+    },
+    {
+      "level": "store",
+      "name": "WI_3",
+      "series": 96,
+      "wape": 0.7382944677705457,
+      "bias": -0.10373614629824947,
+      "coverage_80": 0.8240327380952381,
+      "recent_vs_previous_28": -0.05833609545906526
+    }
+  ],
+  "flags": [
+    "category FOODS: holdout bias exceeds 10%",
+    "store CA_1: holdout bias exceeds 10%",
+    "store CA_2: holdout bias exceeds 10%",
+    "store TX_3: holdout bias exceeds 10%",
+    "store WI_1: holdout bias exceeds 10%",
+    "store WI_3: holdout bias exceeds 10%"
+  ],
+  "rules": {
+    "absolute_bias": 0.1,
+    "minimum_80_coverage": 0.7
+  }
+}

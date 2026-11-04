@@ -1,0 +1,424 @@
+{
+  "source": "M5 sales_train_evaluation.csv",
+  "series_count": 1000,
+  "date_range": [
+    "2011-01-29",
+    "2016-05-22"
+  ],
+  "holdout_start": "2016-04-25",
+  "selected_method": "lightgbm",
+  "profile": {
+    "series": 1000,
+    "days": 1941,
+    "zero_demand_share": 0.6833379701184956,
+    "last_28_price_coverage": 1.0,
+    "stores": {
+      "CA_1": 106,
+      "CA_2": 97,
+      "CA_3": 114,
+      "CA_4": 85,
+      "TX_1": 102,
+      "TX_2": 107,
+      "TX_3": 94,
+      "WI_1": 104,
+      "WI_2": 95,
+      "WI_3": 96
+    },
+    "categories": {
+      "FOODS": 446,
+      "HOBBIES": 183,
+      "HOUSEHOLD": 371
+    },
+    "recent_mean_units_per_series_day": 1.3455714285714286
+  },
+  "validation": {
+    "last": {
+      "mean_subset_wrmsse": 1.4480896205734117,
+      "folds": [
+        {
+          "start": "2016-02-01",
+          "subset_wrmsse": 1.4538600343970078,
+          "mae": 1.3316785714285715,
+          "wape": 1.0578772661503106,
+          "bias": 0.22098334610037734,
+          "weight_basis": "revenue",
+          "levels_scored": 12
+        },
+        {
+          "start": "2016-02-29",
+          "subset_wrmsse": 1.4579658676073979,
+          "mae": 1.324107142857143,
+          "wape": 1.0470501849812195,
+          "bias": 0.2201417718659098,
+          "weight_basis": "revenue",
+          "levels_scored": 12
+        },
+        {
+          "start": "2016-03-28",
+          "subset_wrmsse": 1.4324429597158297,
+          "mae": 1.3439285714285714,
+          "wape": 1.0532355575459025,
+          "bias": 0.1896551724137931,
+          "weight_basis": "revenue",
+          "levels_scored": 12
+        }
+      ]
+    },
+    "seasonal_7": {
+      "mean_subset_wrmsse": 0.9591367550999317,
+      "folds": [
+        {
+          "start": "2016-02-01",
+          "subset_wrmsse": 0.970760793348413,
+          "mae": 1.1659642857142858,
+          "wape": 0.9262348568672512,
+          "bias": -0.058756773626124206,
+          "weight_basis": "revenue",
+          "levels_scored": 12
+        },
+        {
+          "start": "2016-02-29",
+          "subset_wrmsse": 0.9903145220811546,
+          "mae": 1.1513214285714286,
+          "wape": 0.9104182552458414,
+          "bias": -0.07921714818266543,
+          "weight_basis": "revenue",
+          "levels_scored": 12
+        },
+        {
+          "start": "2016-03-28",
+          "subset_wrmsse": 0.9163349498702275,
+          "mae": 1.1961428571428572,
+          "wape": 0.9374160322436185,
+          "bias": -0.006941334527541424,
+          "weight_basis": "revenue",
+          "levels_scored": 12
+        }
+      ]
+    },
+    "seasonal_28": {
+      "mean_subset_wrmsse": 0.9689259084453997,
+      "folds": [
+        {
+          "start": "2016-02-01",
+          "subset_wrmsse": 0.9725881438927558,
+          "mae": 1.18075,
+          "wape": 0.9379805373506965,
+          "bias": -0.07214798422560785,
+          "weight_basis": "revenue",
+          "levels_scored": 12
+        },
+        {
+          "start": "2016-02-29",
+          "subset_wrmsse": 0.9975364313792352,
+          "mae": 1.2242142857142857,
+          "wape": 0.9680589680589681,
+          "bias": -0.004575108023383886,
+          "weight_basis": "revenue",
+          "levels_scored": 12
+        },
+        {
+          "start": "2016-03-28",
+          "subset_wrmsse": 0.9366531500642082,
+          "mae": 1.20525,
+          "wape": 0.9445532915360502,
+          "bias": -0.008928571428571428,
+          "weight_basis": "revenue",
+          "levels_scored": 12
+        }
+      ]
+    },
+    "weekday_blend": {
+      "mean_subset_wrmsse": 0.7892402453155895,
+      "folds": [
+        {
+          "start": "2016-02-01",
+          "subset_wrmsse": 0.783589716817509,
+          "mae": 1.0255762044454377,
+          "wape": 0.8147114286172513,
+          "bias": -0.031986590208470896,
+          "weight_basis": "revenue",
+          "levels_scored": 12
+        },
+        {
+          "start": "2016-02-29",
+          "subset_wrmsse": 0.7833338873324376,
+          "mae": 1.0606706825958856,
+          "wape": 0.8387353247108023,
+          "bias": 0.038960895428104304,
+          "weight_basis": "revenue",
+          "levels_scored": 12
+        },
+        {
+          "start": "2016-03-28",
+          "subset_wrmsse": 0.8007971317968217,
+          "mae": 1.0512669849048004,
+          "wape": 0.8238769474175551,
+          "bias": 0.015713462548491392,
+          "weight_basis": "revenue",
+          "levels_scored": 12
+        }
+      ]
+    },
+    "lightgbm": {
+      "mean_subset_wrmsse": 0.7491068353811233,
+      "folds": [
+        {
+          "start": "2016-02-01",
+          "subset_wrmsse": 0.7666870445145264,
+          "mae": 0.98969757089933,
+          "wape": 0.7862096628133242,
+          "bias": -0.06747486108944885,
+          "weight_basis": "revenue",
+          "levels_scored": 12
+        },
+        {
+          "start": "2016-02-29",
+          "subset_wrmsse": 0.752265154675765,
+          "mae": 0.9987916628021558,
+          "wape": 0.7898039074376673,
+          "bias": -0.044653642634800914,
+          "weight_basis": "revenue",
+          "levels_scored": 12
+        },
+        {
+          "start": "2016-03-28",
+          "subset_wrmsse": 0.7283683069530786,
+          "mae": 0.9875504884217726,
+          "wape": 0.7739423890452763,
+          "bias": -0.01915556814936279,
+          "weight_basis": "revenue",
+          "levels_scored": 12
+        }
+      ]
+    }
+  },
+  "holdout": {
+    "selected": {
+      "subset_wrmsse": 0.7734611973737101,
+      "mae": 1.009713960411154,
+      "wape": 0.7503978896781057,
+      "bias": -0.06790087260384474,
+      "weight_basis": "revenue",
+      "levels_scored": 12
+    },
+    "seasonal_28": {
+      "subset_wrmsse": 0.9884119562705608,
+      "mae": 1.249142857142857,
+      "wape": 0.9283363414375199,
+      "bias": -0.051704002548041195,
+      "weight_basis": "revenue",
+      "levels_scored": 12
+    },
+    "by_method": {
+      "last": {
+        "subset_wrmsse": 1.3076221079394348,
+        "mae": 1.3386428571428572,
+        "wape": 0.994850833421807,
+        "bias": 0.12145663021552182,
+        "weight_basis": "revenue",
+        "levels_scored": 12
+      },
+      "seasonal_7": {
+        "subset_wrmsse": 0.9715309388802112,
+        "mae": 1.2079285714285715,
+        "wape": 0.8977067629260006,
+        "bias": -0.0725130056269243,
+        "weight_basis": "revenue",
+        "levels_scored": 12
+      },
+      "seasonal_28": {
+        "subset_wrmsse": 0.9884119562705608,
+        "mae": 1.249142857142857,
+        "wape": 0.9283363414375199,
+        "bias": -0.051704002548041195,
+        "weight_basis": "revenue",
+        "levels_scored": 12
+      },
+      "weekday_blend": {
+        "subset_wrmsse": 0.7854127937162575,
+        "mae": 1.0786417602295861,
+        "wape": 0.8016235610581912,
+        "bias": -0.03854168983269559,
+        "weight_basis": "revenue",
+        "levels_scored": 12
+      },
+      "lightgbm": {
+        "subset_wrmsse": 0.7734611973737101,
+        "mae": 1.009713960411154,
+        "wape": 0.7503978896781057,
+        "bias": -0.06790087260384474,
+        "weight_basis": "revenue",
+        "levels_scored": 12
+      }
+    },
+    "coverage_80": 0.7915714285714286,
+    "coverage_90": 0.89775
+  },
+  "monitoring": {
+    "segments": [
+      {
+        "level": "category",
+        "name": "FOODS",
+        "series": 446,
+        "wape": 0.6753141473916768,
+        "bias": -0.10902959937299139,
+        "coverage_80": 0.7419923126201153,
+        "recent_vs_previous_28": 0.003515329506518894
+      },
+      {
+        "level": "category",
+        "name": "HOBBIES",
+        "series": 183,
+        "wape": 1.0839097339593644,
+        "bias": -0.04731795853998163,
+        "coverage_80": 0.8356752537080406,
+        "recent_vs_previous_28": 0.02258269720101791
+      },
+      {
+        "level": "category",
+        "name": "HOUSEHOLD",
+        "series": 371,
+        "wape": 0.8159925253692446,
+        "bias": 0.026123359723038652,
+        "coverage_80": 0.8294185598767809,
+        "recent_vs_previous_28": 0.01725898692810457
+      },
+      {
+        "level": "store",
+        "name": "CA_1",
+        "series": 106,
+        "wape": 0.883964235007662,
+        "bias": -0.10752267626512073,
+        "coverage_80": 0.7564016172506739,
+        "recent_vs_previous_28": -0.0358775940907492
+      },
+      {
+        "level": "store",
+        "name": "CA_2",
+        "series": 97,
+        "wape": 0.7487156660741235,
+        "bias": -0.1322880042698177,
+        "coverage_80": 0.8000736377025037,
+        "recent_vs_previous_28": 0.12084592145015116
+      },
+      {
+        "level": "store",
+        "name": "CA_3",
+        "series": 114,
+        "wape": 0.7154382303653914,
+        "bias": -0.025690604717214367,
+        "coverage_80": 0.7706766917293233,
+        "recent_vs_previous_28": 0.05290215588723046
+      },
+      {
+        "level": "store",
+        "name": "CA_4",
+        "series": 85,
+        "wape": 0.7055792374603052,
+        "bias": -0.020393373996964767,
+        "coverage_80": 0.8210084033613445,
+        "recent_vs_previous_28": 0.04815864022662897
+      },
+      {
+        "level": "store",
+        "name": "TX_1",
+        "series": 102,
+        "wape": 0.8571139233876829,
+        "bias": 0.04937541013212685,
+        "coverage_80": 0.8336834733893558,
+        "recent_vs_previous_28": 0.03673469387755102
+      },
+      {
+        "level": "store",
+        "name": "TX_2",
+        "series": 107,
+        "wape": 0.6548270535246259,
+        "bias": 0.010294818556661424,
+        "coverage_80": 0.7600133511348465,
+        "recent_vs_previous_28": -0.07133295085102309
+      },
+      {
+        "level": "store",
+        "name": "TX_3",
+        "series": 94,
+        "wape": 0.6625149173697287,
+        "bias": -0.1622026769957065,
+        "coverage_80": 0.7879939209726444,
+        "recent_vs_previous_28": 0.02920497566252034
+      },
+      {
+        "level": "store",
+        "name": "WI_1",
+        "series": 104,
+        "wape": 0.8755691004405788,
+        "bias": -0.2039965935698302,
+        "coverage_80": 0.7891483516483516,
+        "recent_vs_previous_28": -0.07668474051123164
+      },
+      {
+        "level": "store",
+        "name": "WI_2",
+        "series": 95,
+        "wape": 0.7954282594642141,
+        "bias": -0.005485048641714664,
+        "coverage_80": 0.7845864661654135,
+        "recent_vs_previous_28": 0.04193449647995107
+      },
+      {
+        "level": "store",
+        "name": "WI_3",
+        "series": 96,
+        "wape": 0.7382944677705457,
+        "bias": -0.10373614629824947,
+        "coverage_80": 0.8240327380952381,
+        "recent_vs_previous_28": -0.05833609545906526
+      }
+    ],
+    "flags": [
+      "category FOODS: holdout bias exceeds 10%",
+      "store CA_1: holdout bias exceeds 10%",
+      "store CA_2: holdout bias exceeds 10%",
+      "store TX_3: holdout bias exceeds 10%",
+      "store WI_1: holdout bias exceeds 10%",
+      "store WI_3: holdout bias exceeds 10%"
+    ],
+    "rules": {
+      "absolute_bias": 0.1,
+      "minimum_80_coverage": 0.7
+    }
+  },
+  "inventory": {
+    "selected": {
+      "cost": 29281.0,
+      "shortage_units": 2499.0,
+      "excess_units": 16786.0,
+      "ordered_units": 42670.0
+    },
+    "seasonal_28": {
+      "cost": 31995.0,
+      "shortage_units": 2546.0,
+      "excess_units": 19265.0,
+      "ordered_units": 45102.0
+    },
+    "cushions": {
+      "selected": {
+        "0.8": 5.1895085443973485,
+        "0.9": 9.71305277155067,
+        "0.95": 15.837782637263587
+      },
+      "seasonal_28": {
+        "0.8": 6.0,
+        "0.9": 11.0,
+        "0.95": 17.0
+      }
+    },
+    "assumptions": {
+      "horizon_days": 28,
+      "starting_stock_days": 7,
+      "shortage_cost_per_unit": 5,
+      "excess_cost_per_unit": 1,
+      "cushion_percentile": 0.9
+    }
+  }
+}
