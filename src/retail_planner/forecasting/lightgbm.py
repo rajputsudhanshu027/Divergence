@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import date, timedelta
 from pathlib import Path
 from statistics import mean, pstdev
@@ -25,6 +25,14 @@ class ModelConfig:
     stride_days: int = 14
     rounds: int = 160
     threads: int = 4
+    early_stopping_rounds: int = 20
+    learning_rate: float = 0.05
+    num_leaves: int = 31
+    min_data_in_leaf: int = 40
+    feature_fraction: float = 0.9
+    bagging_fraction: float = 1.0
+    lambda_l1: float = 0.0
+    lambda_l2: float = 0.0
 
 
 def training_origins(cutoff: int, config: ModelConfig) -> range:
@@ -100,34 +108,113 @@ def feature_row(dataset: Dataset, item: Series, origin: int, step: int,
     return _row_from_base(dataset, item, origin, step, _base(dataset, item, origin, codes))
 
 
-def train_lightgbm(dataset: Dataset, cutoff: int, config: ModelConfig):
-    try:
-        import lightgbm as lgb
-        import numpy as np
-    except ImportError as exc:
-        raise RuntimeError("Install the ml extra: pip install -e '.[ml]'") from exc
+def _training_arrays(dataset: Dataset, origins, codes: dict):
+    import numpy as np
 
-    codes = _codes(dataset)
     rows: list[list[float]] = []
     labels: list[float] = []
-    origins = training_origins(cutoff, config)
     for origin in origins:
         for item in dataset.series:
             base = _base(dataset, item, origin, codes)
             for step in range(28):
                 rows.append(_row_from_base(dataset, item, origin, step, base))
                 labels.append(item.sales[origin + step])
-    matrix = np.asarray(rows, dtype=np.float32)
-    target = np.asarray(labels, dtype=np.float32)
+    return np.asarray(rows, dtype=np.float32), np.asarray(labels, dtype=np.float32)
+
+
+def _parameters(config: ModelConfig) -> dict:
+    return {
+        "objective": "poisson", "metric": "poisson",
+        "learning_rate": config.learning_rate, "num_leaves": config.num_leaves,
+        "min_data_in_leaf": config.min_data_in_leaf,
+        "feature_fraction": config.feature_fraction,
+        "bagging_fraction": config.bagging_fraction,
+        "lambda_l1": config.lambda_l1, "lambda_l2": config.lambda_l2,
+        "verbosity": -1, "seed": 13, "feature_fraction_seed": 13,
+        "bagging_seed": 13, "num_threads": config.threads,
+    }
+
+
+def train_lightgbm(dataset: Dataset, cutoff: int, config: ModelConfig):
+    try:
+        import lightgbm as lgb
+    except ImportError as exc:
+        raise RuntimeError("Install the ml extra: pip install -e '.[ml]'") from exc
+
+    codes = _codes(dataset)
+    origins = list(training_origins(cutoff, config))
+    if len(origins) < 2:
+        raise ValueError("LightGBM needs at least two completed training windows")
+    training = origins[:-1]
+    validation = origins[-1:]
+    matrix, target = _training_arrays(dataset, training, codes)
+    valid_matrix, valid_target = _training_arrays(dataset, validation, codes)
     train_set = lgb.Dataset(matrix, label=target, feature_name=list(FEATURE_NAMES),
                             categorical_feature=list(CATEGORICAL_FEATURES))
+    valid_set = lgb.Dataset(valid_matrix, label=valid_target, reference=train_set,
+                            feature_name=list(FEATURE_NAMES),
+                            categorical_feature=list(CATEGORICAL_FEATURES))
     booster = lgb.train(
-        {"objective": "poisson", "metric": "poisson", "learning_rate": 0.05,
-         "num_leaves": 31, "min_data_in_leaf": 40, "feature_fraction": 0.9,
-         "verbosity": -1, "seed": 13, "num_threads": config.threads},
-        train_set, num_boost_round=config.rounds,
+        _parameters(config), train_set, num_boost_round=config.rounds,
+        valid_sets=[valid_set], valid_names=["time_validation"],
+        callbacks=[lgb.early_stopping(
+            min(config.early_stopping_rounds, max(1, config.rounds // 2)), verbose=False)],
     )
-    return booster, codes, len(labels)
+    return booster, codes, len(target)
+
+
+def tune_lightgbm(dataset: Dataset, cutoff: int, config: ModelConfig, trials: int) -> tuple[ModelConfig, dict]:
+    """Tune on the last completed pre-validation window; no target at/after cutoff is used."""
+    if trials < 1:
+        return config, {"trials": 0, "best_value": None, "best_params": {}}
+    try:
+        import lightgbm as lgb
+        import numpy as np
+        import optuna
+    except ImportError as exc:
+        raise RuntimeError("Install the ml extra: pip install -e '.[ml]'") from exc
+
+    codes = _codes(dataset)
+    origins = list(training_origins(cutoff, config))
+    if len(origins) < 2:
+        raise ValueError("Tuning needs at least two completed training windows")
+    train_matrix, train_target = _training_arrays(dataset, origins[:-1], codes)
+    valid_matrix, valid_target = _training_arrays(dataset, origins[-1:], codes)
+
+    def objective(trial):
+        candidate = replace(
+            config,
+            learning_rate=trial.suggest_float("learning_rate", 0.02, 0.1, log=True),
+            num_leaves=trial.suggest_int("num_leaves", 31, 127),
+            min_data_in_leaf=trial.suggest_int("min_data_in_leaf", 20, 120),
+            feature_fraction=trial.suggest_float("feature_fraction", 0.6, 1.0),
+            bagging_fraction=trial.suggest_float("bagging_fraction", 0.6, 1.0),
+            lambda_l1=trial.suggest_float("lambda_l1", 1e-8, 10.0, log=True),
+            lambda_l2=trial.suggest_float("lambda_l2", 1e-8, 10.0, log=True),
+        )
+        train_set = lgb.Dataset(train_matrix, label=train_target,
+                                feature_name=list(FEATURE_NAMES),
+                                categorical_feature=list(CATEGORICAL_FEATURES))
+        valid_set = lgb.Dataset(valid_matrix, label=valid_target, reference=train_set,
+                                feature_name=list(FEATURE_NAMES),
+                                categorical_feature=list(CATEGORICAL_FEATURES))
+        booster = lgb.train(
+            _parameters(candidate), train_set, num_boost_round=config.rounds,
+            valid_sets=[valid_set],
+            callbacks=[lgb.early_stopping(
+                min(config.early_stopping_rounds, max(1, config.rounds // 2)), verbose=False)],
+        )
+        predicted = booster.predict(valid_matrix, num_threads=config.threads)
+        return float(np.mean(np.abs(valid_target - predicted)))
+
+    optuna.logging.set_verbosity(optuna.logging.WARNING)
+    study = optuna.create_study(
+        direction="minimize", sampler=optuna.samplers.TPESampler(seed=13))
+    study.optimize(objective, n_trials=trials, show_progress_bar=False)
+    tuned = replace(config, **study.best_params)
+    return tuned, {"trials": trials, "best_value": study.best_value,
+                   "best_params": study.best_params,
+                   "tuning_cutoff": dataset.dates[cutoff - 1]}
 
 
 def predict_lightgbm(dataset: Dataset, origin: int, booster, codes: dict) -> dict[str, list[float]]:

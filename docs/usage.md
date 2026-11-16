@@ -52,6 +52,7 @@ uv run retail-planner --help
 | `run` | Evaluate models on supplied M5 data | Three M5 CSVs | Forecasts, report, optional model, run manifest |
 | `analyze` | Build SQL analysis from a saved study | `<output-dir>/results.json` | SQLite in the report directory; exports in `<analysis-dir>` |
 | `serve` | Open saved results over HTTP | `<output-dir>/results.json` and `index.html` | No report artifacts |
+| `monitor` | Evaluate saved metrics and optional reference drift | One or two saved reports | `monitoring_check.json` |
 
 Always specify `--output-dir reports/demo` for a synthetic demonstration. The shared default is `reports/latest`, including for `demo`. Reusing a directory replaces its generated files.
 
@@ -68,8 +69,12 @@ These options apply to `run` and `demo`:
 | `--stride-days` | `14` | Spacing between ML training origins |
 | `--rounds` | `160` | LightGBM boosting rounds |
 | `--threads` | `4` | LightGBM training thread count |
+| `--tune-trials` | `0` | Optuna trials on a completed window before the validation folds |
+| `--config` | None | JSON experiment profile; explicit command-line values override profile defaults |
 
 `run` also accepts `--data-dir` (default `data/raw/m5`) and `--limit-series` (default `1000`). A zero limit reads all series and can require substantial memory. `demo` generates and uses its own small dataset in `<output-dir>/demo_data/`.
+
+Use `--config configs/sample.json` for the recruiter study or `--config configs/full.json` for the resource-intensive full-series experiment. The full profile is not suitable for a typical laptop.
 
 ### Analysis options
 
@@ -86,6 +91,15 @@ uv run retail-planner serve --output-dir reports/demo --port 8001
 ```
 
 The default host is `127.0.0.1`, and the default port is `8000`. If you change the port, use that port in the dashboard and API URLs. The application loads results at startup; restart it after regenerating its report.
+
+### Monitoring options
+
+```bash
+uv run retail-planner monitor --output-dir reports/latest
+uv run retail-planner monitor --output-dir reports/candidate --reference-dir reports/latest --fail-on-alert
+```
+
+The check flags low recent price coverage, interval miscalibration, saved store/category warnings, more than 15% WAPE deterioration, and more than 25% recent-demand movement versus a reference. `--fail-on-alert` returns status 1 for scheduled jobs or deployment gates.
 
 ## Query the database
 

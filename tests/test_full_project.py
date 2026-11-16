@@ -1,12 +1,14 @@
+import asyncio
 import tempfile
 from pathlib import Path
 
-from fastapi.testclient import TestClient
+import httpx
 
 from retail_planner.data.m5 import Dataset, Series, load_m5, write_demo
 from retail_planner.evaluation.study import run_study
 from retail_planner.forecasting.lightgbm import ModelConfig, _codes, feature_row, training_origins
 from retail_planner.forecasting.lightgbm import predict_lightgbm, save_model, train_lightgbm
+from retail_planner.forecasting.lightgbm import tune_lightgbm
 from retail_planner.presentation.api import create_app
 from retail_planner.presentation.report import write_dashboard, write_report
 
@@ -47,28 +49,35 @@ def test_report_and_api_scenario():
         assert (path / "report" / "monitoring.json").is_file()
         assert (path / "report" / "model_card.md").is_file()
 
-        client = TestClient(create_app(path / "report"))
-        assert client.get("/health").json()["series_count"] == 24
-        rows = client.get("/series", params={"store": "CA_1"}).json()
-        assert rows and all(row["store"] == "CA_1" for row in rows)
-        series_id = rows[0]["id"]
-        forecast = client.get(f"/forecast/{series_id}")
-        assert forecast.status_code == 200
-        assert len(forecast.json()["forecast"]) == 28
-        response = client.post("/scenario", json={
-            "series_id": series_id, "cushion_percentile": 0.9,
-            "shortage_cost": 5, "excess_cost": 1,
-        })
-        assert response.status_code == 200
-        assert response.json()["selected"]["ordered_units"] >= 0
-        assert response.json()["future_order_units"] >= 0
-        higher = client.post("/scenario", json={
-            "series_id": series_id, "cushion_percentile": 0.95,
-        }).json()
-        assert higher["future_order_units"] >= response.json()["future_order_units"]
-        assert client.post("/scenario", json={"series_id": series_id,
-                                               "cushion_percentile": 0.6}).status_code == 422
-        assert client.get("/forecast/missing").status_code == 404
+        async def exercise_api():
+            transport = httpx.ASGITransport(app=create_app(path / "report"))
+            async with httpx.AsyncClient(
+                    transport=transport, base_url="http://testserver") as client:
+                assert (await client.get("/health")).json()["series_count"] == 24
+                rows = (await client.get("/series", params={"store": "CA_1"})).json()
+                assert rows and all(row["store"] == "CA_1" for row in rows)
+                series_id = rows[0]["id"]
+                forecast = await client.get(f"/forecast/{series_id}")
+                assert forecast.status_code == 200
+                assert len(forecast.json()["forecast"]) == 28
+                response = await client.post("/scenario", json={
+                    "series_id": series_id, "cushion_percentile": 0.9,
+                    "shortage_cost": 5, "excess_cost": 1,
+                })
+                assert response.status_code == 200
+                assert response.json()["selected"]["ordered_units"] >= 0
+                assert response.json()["future_order_units"] >= 0
+                higher = (await client.post("/scenario", json={
+                    "series_id": series_id, "cushion_percentile": 0.95,
+                })).json()
+                assert higher["future_order_units"] >= response.json()["future_order_units"]
+                invalid = await client.post("/scenario", json={
+                    "series_id": series_id, "cushion_percentile": 0.6,
+                })
+                assert invalid.status_code == 422
+                assert (await client.get("/forecast/missing")).status_code == 404
+
+        asyncio.run(exercise_api())
 
 
 def test_dashboard_refresh_preserves_saved_study_artifacts(tmp_path):
@@ -101,3 +110,17 @@ def test_saved_lightgbm_reproduces_future_predictions(tmp_path):
     actual = predict_lightgbm(dataset, cutoff, reloaded, codes)
     for series_id in expected:
         assert actual[series_id] == pytest.approx(expected[series_id])
+
+
+def test_tuning_uses_only_pre_cutoff_windows(tmp_path):
+    import pytest
+    pytest.importorskip("optuna")
+    write_demo(tmp_path / "data")
+    dataset = load_m5(tmp_path / "data")
+    cutoff = len(dataset.dates) - 56
+    config = ModelConfig(train_days=70, stride_days=14, rounds=3, threads=1,
+                         early_stopping_rounds=1)
+    tuned, record = tune_lightgbm(dataset, cutoff, config, trials=2)
+    assert record["trials"] == 2
+    assert record["tuning_cutoff"] == dataset.dates[cutoff - 1]
+    assert 0.02 <= tuned.learning_rate <= 0.1

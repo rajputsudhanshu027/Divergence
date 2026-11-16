@@ -1,8 +1,13 @@
 .venv/
+.aws
+build/
+dist/
 __pycache__/
 .pytest_cache/
 *.pyc
 *.egg-info/
 data/raw/**/*.csv
-data/outputs/*
-!data/outputs/.gitkeep
+reports/*
+!reports/README.md
+!reports/portfolio/
+!reports/portfolio/**

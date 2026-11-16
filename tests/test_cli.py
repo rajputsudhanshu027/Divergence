@@ -53,3 +53,19 @@ def test_missing_report_has_actionable_cli_error(tmp_path, monkeypatch, capsys):
         main()
     assert error.value.code == 2
     assert "results.json" in capsys.readouterr().err
+
+
+def test_json_profile_applies_reproducible_defaults(tmp_path, monkeypatch):
+    profile = tmp_path / "profile.json"
+    profile.write_text(json.dumps({"folds": 2, "rounds": 3, "threads": 1}))
+    report = tmp_path / "configured"
+    monkeypatch.setattr(sys, "argv", [
+        "retail-planner", "demo", "--config", str(profile), "--output-dir", str(report),
+    ])
+
+    main()
+
+    result = json.loads((report / "results.json").read_text())
+    manifest = json.loads((report / "run_manifest.json").read_text())
+    assert len(result["validation_starts"]) == 2
+    assert manifest["options"]["config"] == str(profile)

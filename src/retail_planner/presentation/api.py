@@ -31,17 +31,17 @@ def create_app(report_dir: Path) -> FastAPI:
                   description="Precomputed M5 forecasts and a transparent inventory scenario")
 
     @app.get("/health")
-    def health():
+    async def health():
         return {"status": "ok", "source": result["source"],
                 "series_count": result["series_count"]}
 
     @app.get("/metrics")
-    def metrics():
+    async def metrics():
         return {key: result[key] for key in ("profile", "validation", "holdout", "monitoring", "inventory")}
 
     @app.get("/series")
-    def list_series(store: str | None = None, category: str | None = None,
-                    limit: int = Query(default=100, ge=1, le=1000)):
+    async def list_series(store: str | None = None, category: str | None = None,
+                          limit: int = Query(default=100, ge=1, le=1000)):
         rows = (row for row in result["series"]
                 if (store is None or row["store"] == store)
                 and (category is None or row["category"] == category))
@@ -49,7 +49,7 @@ def create_app(report_dir: Path) -> FastAPI:
                  "category": row["category"]} for _, row in zip(range(limit), rows)]
 
     @app.get("/forecast/{series_id}")
-    def forecast_series(series_id: str):
+    async def forecast_series(series_id: str):
         row = by_id.get(series_id)
         if row is None:
             raise HTTPException(status_code=404, detail="Series not found")
@@ -57,7 +57,7 @@ def create_app(report_dir: Path) -> FastAPI:
                 "forecast_dates": result["forecast_dates"], **row}
 
     @app.post("/scenario")
-    def scenario(request: ScenarioRequest):
+    async def scenario(request: ScenarioRequest):
         row = by_id.get(request.series_id)
         if row is None:
             raise HTTPException(status_code=404, detail="Series not found")
@@ -87,7 +87,7 @@ def create_app(report_dir: Path) -> FastAPI:
                 "future_on_hand_assumed": row["future_on_hand"]}
 
     @app.get("/", include_in_schema=False)
-    def dashboard():
+    async def dashboard():
         return FileResponse(report_dir / "index.html")
 
     return app

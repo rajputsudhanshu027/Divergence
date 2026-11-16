@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "kind": "analysis_export_from_saved_results",
-  "exported_at_utc": "2026-11-01T17:51:08.211575+00:00",
+  "exported_at_utc": "2026-11-04T16:30:06.100784+00:00",
   "environment_observed_at_export": {
     "python": "3.12.14",
     "packages": {
@@ -11,10 +11,63 @@
       "fastapi": "0.162.0"
     }
   },
-  "original_run_manifest_available": false,
+  "original_run_manifest_available": true,
+  "training_run": {
+    "schema_version": 1,
+    "kind": "recorded_at_run_completion",
+    "recorded_at_utc": "2026-11-04T16:29:45.663957+00:00",
+    "environment": {
+      "python": "3.12.14",
+      "packages": {
+        "retail-demand-planner": "0.1.0",
+        "numpy": "2.5.4",
+        "lightgbm": "4.7.0",
+        "fastapi": "0.162.0"
+      }
+    },
+    "options": {
+      "mode": "run",
+      "config": "configs/sample.json",
+      "data_dir": "data/raw/m5",
+      "output_dir": "reports/latest",
+      "analysis_dir": "reports/analysis",
+      "reference_dir": null,
+      "fail_on_alert": false,
+      "limit_series": 1000,
+      "folds": 3,
+      "ml": true,
+      "train_days": 365,
+      "stride_days": 14,
+      "rounds": 240,
+      "threads": 4,
+      "tune_trials": 10,
+      "host": "127.0.0.1",
+      "port": 8000
+    },
+    "sampling_seed": 13,
+    "selected_series_sha256": "0393e841548a4c09922018c7813476edc771b9ce30d510aba739b9e961b235bb",
+    "inputs": {
+      "sales_train_evaluation.csv": {
+        "bytes": 121736518,
+        "sha256": "4b4a47c44c38380d2a9168216fea8c9ff2f31b1ddb772f8a0995952a038b8aa0"
+      },
+      "calendar.csv": {
+        "bytes": 103469,
+        "sha256": "d12b5914ef03e66649adf5dd9e996e6602251c22b7a6af8f1f7e3aa12f8860f5"
+      },
+      "sell_prices.csv": {
+        "bytes": 203395785,
+        "sha256": "9da3ad1f8b8ccacdbdc70612191dd375ec24a4ac6625c24b75b3bc60b0bed2ef"
+      }
+    },
+    "results": {
+      "bytes": 5203019,
+      "sha256": "587d86184a4dfaf35cc86b6d156570a7eeb5eb60fd4ef8e847576e6b800a2bef"
+    }
+  },
   "source_results": {
-    "bytes": 5210975,
-    "sha256": "df082af64aae13aea5c60205dd2083fd53573f26f593cdc5f847e58ed968535a"
+    "bytes": 5203019,
+    "sha256": "587d86184a4dfaf35cc86b6d156570a7eeb5eb60fd4ef8e847576e6b800a2bef"
   },
   "quality": {
     "status": "passed",
@@ -64,39 +117,39 @@
     "category_performance": 3,
     "error_review": 1000,
     "inventory_review": 1000,
-    "model_comparison": 5,
+    "model_comparison": 7,
     "store_performance": 10,
     "weekday_demand": 7,
     "weekly_demand": 80
   },
   "outputs": {
     "case_study.md": {
-      "bytes": 4306,
-      "sha256": "90819d0bff75a54532ad2596e218792b05f29f535a2a4df9eacc507d569954e7"
+      "bytes": 4382,
+      "sha256": "d4231ae72cd2fde860fd142c13d58daf7f1b154e539c3d0219e94b786899e9e5"
     },
     "summary.json": {
-      "bytes": 11797,
-      "sha256": "7a30b4c5f09a5d5786491d5f65f0ae2ff22d7d7267e40d53f69f7c9601025d1f"
+      "bytes": 14651,
+      "sha256": "11c1974dcebd066cf274ad16ff6435f9214449672ea730bc4379636bbfed1110"
     },
     "category_performance.csv": {
-      "bytes": 316,
-      "sha256": "1be63f29b119e732f8ebf2073aa374e77886277edb821f7b205ac3c03209cbbe"
+      "bytes": 315,
+      "sha256": "898526fd71d8e4db98762d47f71ea13b6f751c7bc09353ad54ea46b94382b9da"
     },
     "error_review.csv": {
-      "bytes": 122831,
-      "sha256": "b37a6085618fc265b828cc5bf5c5fd994fd3356e73f866f0c10eac0776568975"
+      "bytes": 122887,
+      "sha256": "652d70d313c6d98787b21236c3ae5f2610881114b95b93c3a6fb8b72adc5bbff"
     },
     "inventory_review.csv": {
-      "bytes": 68081,
-      "sha256": "c1e7c57549c86c9e21f4ec4d41d0770e7d0c68cc9ab66b88a331a34289fb3f8c"
+      "bytes": 68091,
+      "sha256": "e372f352ccdc570100ad660474e3016f8b142e3c322e09fb261c178ad831c5af"
     },
     "model_comparison.csv": {
-      "bytes": 439,
-      "sha256": "dd200edb753d17740fbb79693e5b3deb95be5bb95af7e3b950cc48cdb950d11e"
+      "bytes": 589,
+      "sha256": "e79c3fd9015c2ed45355a3c11700351f9f568a1dea77211f3f6d6969ef409269"
     },
     "store_performance.csv": {
-      "bytes": 806,
-      "sha256": "73c5bd24d18c5dec23901f13749d7b982da6b9632da4721723c9ee0a27a62702"
+      "bytes": 807,
+      "sha256": "48dd502ebe298bf696c8d9cdcef7a7f72654631678e416bca89252af69b5d308"
     },
     "weekday_demand.csv": {
       "bytes": 233,
@@ -108,7 +161,7 @@
     }
   },
   "database": {
-    "bytes": 27918336,
-    "sha256": "5753736272218ea4ab6e2dfc2f906d5e39ce0662caa8cd008cdb7fe2dd24a7af"
+    "bytes": 27914240,
+    "sha256": "bfd40e9f55f94efc605a5ab75b15f206211b99ed2450c42eb76d8edb6a48a09a"
   }
 }

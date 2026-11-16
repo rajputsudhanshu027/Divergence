@@ -1,0 +1,10 @@
+{
+  "limit_series": 0,
+  "folds": 5,
+  "ml": true,
+  "train_days": 730,
+  "stride_days": 28,
+  "rounds": 500,
+  "threads": 8,
+  "tune_trials": 40
+}

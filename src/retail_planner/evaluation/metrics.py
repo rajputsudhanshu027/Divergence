@@ -112,3 +112,16 @@ def quantile(values: list[float], probability: float) -> float:
     ordered = sorted(values)
     index = min(len(ordered) - 1, max(0, int(probability * len(ordered) + 0.999999) - 1))
     return ordered[index]
+
+
+def pinball_loss(actual: list[float], predicted: list[float], probability: float) -> float:
+    """Mean quantile loss; lower is better and zero is a perfect quantile forecast."""
+    if len(actual) != len(predicted) or not actual:
+        raise ValueError("Pinball loss needs equally sized, non-empty inputs")
+    if not 0 < probability < 1:
+        raise ValueError("Quantile probability must be between zero and one")
+    losses = []
+    for observed, estimate in zip(actual, predicted):
+        error = observed - estimate
+        losses.append(max(probability * error, (probability - 1) * error))
+    return sum(losses) / len(losses)

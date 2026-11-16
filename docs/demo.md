@@ -22,7 +22,7 @@ Explain the data flow from source files through model evaluation to the dashboar
 
 Open http://127.0.0.1:8000/ and choose an item-store pair. Point to observed sales, future predictions, and the interval. Dates are historical: “future” means after the dataset cutoff, not after today.
 
-Explain the distinction between three rolling validation windows and the final holdout. Model selection uses validation results. The selected model's final error is 0.773 versus 0.988 for the 28-day repeat, a 21.7% reduction in this subset score. The weekday blend is close at 0.785, so model complexity deserves scrutiny.
+Explain the distinction between three rolling validation windows and the final holdout. Model selection uses validation results. The selected model's final error is 0.759 versus 0.988 for the 28-day repeat, a 23.2% reduction in this subset score. The weekday blend is close at 0.785, so model complexity deserves scrutiny.
 
 ## 1:30–2:30 — Demonstrate SQL
 
@@ -41,7 +41,7 @@ For the saved M5 run: CA_1 has 88.4% WAPE. HOBBIES has 108.4% selected WAPE vers
 
 Change the order cushion in the dashboard and explain why the future order changes. Change shortage and leftover costs and explain that these affect the historical cost comparison rather than the order rule.
 
-The saved scenario's total cost is 29,281 versus 31,995, about 8.5% lower. Costs are arbitrary units with an immediate one-time order and assumed starting stock. They are not currency, measured savings, or actual business impact.
+The saved scenario's total cost is 29,045 versus 31,995, about 9.2% lower. Costs are arbitrary units with an immediate one-time order and assumed starting stock. They are not currency, measured savings, or actual business impact.
 
 ## 3:30–4:30 — Recommend an action
 

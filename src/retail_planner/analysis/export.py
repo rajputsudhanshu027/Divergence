@@ -250,11 +250,15 @@ def build_analytics(report_dir: Path, output_dir: Path) -> dict:
         "source", "series_count", "date_range", "holdout_start", "selected_method",
         "profile", "validation", "holdout", "monitoring", "inventory")}
     (output_dir / "summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+    run_manifest_path = report_dir / "run_manifest.json"
+    training_run = json.loads(run_manifest_path.read_text(encoding="utf-8")) \
+        if run_manifest_path.is_file() else None
     manifest = {
         "schema_version": 1, "kind": "analysis_export_from_saved_results",
         "exported_at_utc": datetime.now(timezone.utc).isoformat(),
         "environment_observed_at_export": environment(),
-        "original_run_manifest_available": (report_dir / "run_manifest.json").is_file(),
+        "original_run_manifest_available": training_run is not None,
+        "training_run": training_run,
         "source_results": fingerprint(result_path), "quality": quality,
         "sql": {path.name: fingerprint(path) for path in sorted(SQL_DIR.glob("*.sql"))},
         "csv_rows": {name: len(rows) for name, rows in tables.items()},

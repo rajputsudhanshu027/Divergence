@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "17 3 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install locked dependencies
+        run: uv sync --locked --all-extras
+      - name: Build distribution
+        run: uv build
+      - name: Run tests
+        run: uv run pytest -q
+      - name: Exercise synthetic ML workflow
+        run: uv run retail-planner demo --ml --output-dir reports/ci-demo
+      - name: Exercise SQL export
+        run: uv run retail-planner analyze --output-dir reports/ci-demo --analysis-dir reports/ci-analysis
+      - name: Exercise monitoring checks
+        run: uv run retail-planner monitor --output-dir reports/ci-demo
+      - name: Validate recruiter notebooks
+        run: uv run python scripts/validate_notebooks.py notebooks/01_eda.ipynb notebooks/02_model_analysis.ipynb

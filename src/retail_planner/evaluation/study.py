@@ -9,10 +9,12 @@ from statistics import mean
 
 from ..data.m5 import Dataset
 from ..forecasting.baselines import METHODS, forecast
-from ..forecasting.lightgbm import ModelConfig, predict_lightgbm, save_model, train_lightgbm
+from ..forecasting.lightgbm import (
+    ModelConfig, predict_lightgbm, save_model, train_lightgbm, tune_lightgbm,
+)
 from .diagnostics import holdout_monitoring, profile_dataset
 from .inventory import evaluate_inventory
-from .metrics import quantile, score_hierarchy
+from .metrics import pinball_loss, quantile, score_hierarchy
 
 HORIZON = 28
 
@@ -51,9 +53,26 @@ def _coverage(dataset: Dataset, origin: int, predictions: dict[str, list[float]]
     return covered / total
 
 
+def _interval_metrics(dataset: Dataset, origin: int,
+                      predictions: dict[str, list[float]], radius: float) -> dict[str, float]:
+    actual, lower, upper = [], [], []
+    for item in dataset.series:
+        scale = max(1.0, mean(item.sales[origin - 28:origin]))
+        for day, point in enumerate(predictions[item.id]):
+            actual.append(item.sales[origin + day])
+            lower.append(max(0.0, point - radius * scale))
+            upper.append(point + radius * scale)
+    return {
+        "coverage_80": sum(low <= value <= high for value, low, high in zip(actual, lower, upper)) / len(actual),
+        "pinball_10": pinball_loss(actual, lower, 0.1),
+        "pinball_90": pinball_loss(actual, upper, 0.9),
+        "mean_pinball": (pinball_loss(actual, lower, 0.1) + pinball_loss(actual, upper, 0.9)) / 2,
+    }
+
+
 def run_study(dataset: Dataset, folds: int = 3, include_ml: bool = False,
               model_config: ModelConfig | None = None,
-              artifact_dir: Path | None = None) -> dict:
+              artifact_dir: Path | None = None, tune_trials: int = 0) -> dict:
     if folds < 2:
         raise ValueError("Use at least two validation folds")
     holdout_origin = len(dataset.dates) - HORIZON
@@ -63,6 +82,9 @@ def run_study(dataset: Dataset, folds: int = 3, include_ml: bool = False,
 
     methods = (*METHODS, "lightgbm") if include_ml else METHODS
     config = model_config or ModelConfig()
+    tuning = {"trials": 0, "best_value": None, "best_params": {}}
+    if include_ml and tune_trials:
+        config, tuning = tune_lightgbm(dataset, origins[0], config, tune_trials)
 
     def predict(origin: int, method: str, save: bool = False) -> dict[str, list[float]]:
         if method != "lightgbm":
@@ -91,6 +113,7 @@ def run_study(dataset: Dataset, folds: int = 3, include_ml: bool = False,
     baseline_predictions = holdout_by_method["seasonal_28"]
     radius_80 = quantile(residuals[winner], 0.8)
     radius_90 = quantile(residuals[winner], 0.9)
+    baseline_radius_80 = quantile(residuals["seasonal_28"], 0.8)
     cushions = {method: {str(level): quantile(total_residuals[method], level)
                          for level in (0.8, 0.9, 0.95)} for method in methods}
     winner_cushion = cushions[winner]["0.9"]
@@ -135,6 +158,8 @@ def run_study(dataset: Dataset, folds: int = 3, include_ml: bool = False,
         "forecast_dates": future_dates,
         "selected_method": winner,
         "candidate_methods": list(methods),
+        "model_config": vars(config),
+        "tuning": tuning,
         "profile": profile_dataset(dataset),
         "monitoring": holdout_monitoring(dataset, holdout_origin, holdout_predictions, radius_80),
         "validation": {method: {
@@ -148,6 +173,13 @@ def run_study(dataset: Dataset, folds: int = 3, include_ml: bool = False,
                           for method in methods},
             "coverage_80": _coverage(dataset, holdout_origin, holdout_predictions, radius_80),
             "coverage_90": _coverage(dataset, holdout_origin, holdout_predictions, radius_90),
+            "intervals": {
+                "method": "validation-residual conformal interval",
+                "selected": _interval_metrics(
+                    dataset, holdout_origin, holdout_predictions, radius_80),
+                "seasonal_28": _interval_metrics(
+                    dataset, holdout_origin, baseline_predictions, baseline_radius_80),
+            },
         },
         "inventory": {
             "selected": evaluate_inventory(dataset, holdout_origin, holdout_predictions, winner_cushion),

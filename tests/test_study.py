@@ -44,6 +44,19 @@ class ForecastSafetyTests(unittest.TestCase):
             self.assertEqual(len(result["validation_starts"]), 3)
             self.assertEqual(len(result["forecast_dates"]), 28)
             self.assertEqual(result["holdout"]["selected"]["levels_scored"], 12)
+            self.assertGreaterEqual(result["holdout"]["intervals"]["selected"]["mean_pinball"], 0)
+            self.assertEqual(result["holdout"]["intervals"]["method"],
+                             "validation-residual conformal interval")
+
+    def test_statistical_baselines_handle_level_and_intermittent_demand(self):
+        steady = tuple(float(index) for index in range(60))
+        intermittent = (0.0,) * 20 + (5.0,) + (0.0,) * 9 + (7.0,) + (0.0,) * 29
+        self.assertEqual(forecast(steady, 3, "moving_average_28"),
+                         [sum(steady[-28:]) / 28] * 3)
+        croston = forecast(intermittent, 3, "croston")
+        self.assertEqual(len(croston), 3)
+        self.assertTrue(0 < croston[0] < 7)
+        self.assertEqual(croston, [croston[0]] * 3)
 
 
 if __name__ == "__main__":

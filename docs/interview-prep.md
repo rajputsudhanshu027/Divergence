@@ -19,7 +19,7 @@ The repository does not demonstrate a completed Power BI/Tableau report or stake
 
 ## A 30-second project introduction
 
-“Retail Demand Planner is a sales and inventory analysis project using 1,000 sampled M5 item-store histories. It compares five demand forecasting methods, then uses SQL and a dashboard to inspect store and category errors and a hypothetical stock decision. The selected model reduced the subset forecast score by 21.7% against a seasonal baseline. My main analytical conclusion is that aggregate improvement hides difficult segments, so I would investigate those before using the predictions operationally.”
+“Retail Demand Planner is a sales and inventory analysis project using 1,000 sampled M5 item-store histories. It compares seven demand forecasting methods, then uses SQL and a dashboard to inspect store and category errors and a hypothetical stock decision. The selected model reduced the subset forecast score by 23.2% against a seasonal baseline. My main analytical conclusion is that aggregate improvement hides difficult segments, so I would investigate those before using the predictions operationally.”
 
 ## Questions to prepare thoroughly
 
@@ -57,7 +57,7 @@ A real forecast cannot see later sales. Rolling-origin validation trains on earl
 
 **9. What did you find?**
 
-The selected method improved the subset score by 21.7%, yet holdout WAPE remained 75.0%. CA_1 had the largest store WAPE at 88.4%. HOBBIES improved on its baseline but still had 108.4% WAPE. These are review signals, not explanations of cause.
+The selected method improved the subset score by 23.2%, yet holdout WAPE remained 74.7%. CA_1 had the largest store WAPE at 88.7%. HOBBIES improved on its baseline but still had 107.8% WAPE. These are review signals, not explanations of cause.
 
 **10. What action would you recommend?**
 
@@ -75,7 +75,7 @@ A boundary week with only two observed days should not be compared with seven da
 
 Absolute error can exceed observed demand, particularly for low-demand items with large forecasts. It is an error ratio, not an accuracy percentage bounded by 100%.
 
-**14. Is 8.5% lower simulated cost the same as business savings?**
+**14. Is 9.2% lower simulated cost the same as business savings?**
 
 No. The calculation uses arbitrary unit costs, assumed starting stock, and one immediate order. It omits real lead times, repeated ordering, stock availability, and measured financial costs. It is evidence about a scenario, not an employer outcome.
 
@@ -112,7 +112,7 @@ Use these only when you can describe your own contribution. They are project sto
 - **Situation:** Sparse daily sales make row-level percentage error misleading.
 - **Task:** Compare methods and store performance fairly.
 - **Action:** Use time-based evaluation, multiple baselines, ratio-of-sums WAPE, and a separate scaled hierarchy score. Verify that SQL reproduces evaluation totals.
-- **Result:** The saved study shows a 21.7% subset score reduction, with difficult segments still visible.
+- **Result:** The saved study shows a 23.2% subset score reduction, with difficult segments still visible.
 - **Short version:** “The most useful part was making the comparison defensible: time-based splits, several baselines, and SQL totals that agree with the evaluation.”
 
 ### Turning a score into a decision
@@ -138,7 +138,7 @@ Do not invent a team conflict, failed deployment, stakeholder approval, or compa
 Adapt these to your verified contribution and understanding:
 
 - Analyzed 1,000 sampled retail item-store sales histories; built a SQLite mart and seven SQL reports covering store/category errors, weekly trends, and inventory review.
-- Compared five forecasting methods using rolling validation; selected LightGBM achieved 21.7% lower holdout subset WRMSSE than a 28-day seasonal baseline.
+- Compared seven forecasting methods using rolling validation; selected LightGBM achieved 23.2% lower holdout subset WRMSSE than a 28-day seasonal baseline.
 - Produced an interactive dashboard, auditable CSV exports, and a business case study distinguishing simulated stock costs from measured business impact.
 
 Suggested skills to discuss: SQL joins and window functions, SQLite, Python, KPI definition, data validation, visualization, time-series evaluation, and business communication. Add Excel only after completing the exercise. Add Power BI/Tableau only after building and understanding a report yourself.

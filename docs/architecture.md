@@ -1,13 +1,13 @@
 # Code architecture
 
-The package has five modules organized by responsibility. `cli.py` connects them into four user-facing commands. Each module owns its implementation and exposes a small set of functions to callers.
+The package has five modules organized by responsibility. `cli.py` connects them into five user-facing commands. Each module owns its implementation and exposes a small set of functions to callers.
 
 ## Data flow
 
 ```mermaid
 flowchart TD
     Inputs["M5 CSVs or synthetic data"] --> Data["data.m5: load Dataset"]
-    CLI["cli: demo / run / analyze / serve"] --> Data
+    CLI["cli: demo / run / analyze / serve / monitor"] --> Data
     Data --> Study["evaluation.study: run_study"]
     Study --> Models["forecasting: baselines + LightGBM"]
     Study --> Scores["evaluation: metrics + diagnostics"]
@@ -56,6 +56,7 @@ src/retail_planner/
 ├── evaluation/
 │   ├── __init__.py
 │   ├── diagnostics.py         # Data profile and segment monitoring
+│   ├── monitoring.py          # Saved-report health and drift checks
 │   ├── inventory.py           # One-order scenario and aggregate evaluation
 │   ├── metrics.py             # Subset hierarchy WRMSSE, WAPE, bias, quantiles
 │   └── study.py               # Validation, selection, holdout, future forecast
@@ -85,7 +86,7 @@ The directory must contain the three documented CSVs. The loader aligns daily sa
 
 ### Run the study
 
-`run_study(dataset, folds=3, include_ml=False, model_config=None, artifact_dir=None) -> dict`
+`run_study(dataset, folds=3, include_ml=False, model_config=None, artifact_dir=None, tune_trials=0) -> dict`
 
 This interface owns validation, selection, calibration, final holdout, and future forecasting. Sales features and training targets must remain before each forecast origin. The final 28 days must not affect model selection or residual calibration. The result dictionary is the shared report format.
 
@@ -113,7 +114,7 @@ Paths passed to the CLI are relative to the terminal's working directory. Run do
 | `reports/portfolio/` | Published M5 study snapshot | Included |
 | `src/`, `tests/`, `docs/`, `scripts/` | Code, verification, and instructions | Included |
 
-The published portfolio remains separate from default generated outputs. Its original training environment is unavailable; its export manifest must not be presented as a training-run manifest.
+The published portfolio remains separate from default generated outputs. Its export manifest embeds the run-completion provenance: input hashes, selected-series fingerprint, configuration, environment, and source-result hash.
 
 ## Where to make a change
 
