@@ -1,13 +1,6 @@
 .venv/
-.aws
-build/
-dist/
 __pycache__/
+*.py[cod]
 .pytest_cache/
-*.pyc
-*.egg-info/
-data/raw/**/*.csv
-reports/*
-!reports/README.md
-!reports/portfolio/
-!reports/portfolio/**
+.streamlit/secrets.toml
+logs/

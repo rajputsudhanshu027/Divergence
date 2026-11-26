@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-25T03:30:58Z",
+  "title": "Design System: Development Divergence Explorer",
+  "extensions": {
+    "colorMeta": {
+      "ink": {"role": "neutral", "displayName": "Ink", "canonical": "#141414", "tonalRamp": ["#262626", "#353535", "#444444", "#555555", "#777777", "#999999", "#cccccc", "#f5f5f5"]},
+      "paper": {"role": "neutral", "displayName": "Paper", "canonical": "#ffffff", "tonalRamp": ["#262626", "#353535", "#444444", "#555555", "#777777", "#999999", "#cccccc", "#ffffff"]},
+      "canvas": {"role": "neutral", "displayName": "Sketchpad Canvas", "canonical": "#f5f5f5", "tonalRamp": ["#262626", "#353535", "#444444", "#555555", "#777777", "#999999", "#cccccc", "#f5f5f5"]},
+      "mist": {"role": "neutral", "displayName": "Mist", "canonical": "#e9e9e9", "tonalRamp": ["#262626", "#353535", "#444444", "#555555", "#777777", "#999999", "#cccccc", "#e9e9e9"]},
+      "hairline": {"role": "neutral", "displayName": "Hairline", "canonical": "#d9d9d9", "tonalRamp": ["#262626", "#353535", "#444444", "#555555", "#777777", "#999999", "#cccccc", "#d9d9d9"]},
+      "signal-green": {"role": "primary", "displayName": "Signal Green", "canonical": "#30a81d", "tonalRamp": ["#0e2e10", "#164b13", "#206f18", "#30a81d", "#56c24b", "#83d67c", "#b5e9ae", "#e7f8e5"]},
+      "forest": {"role": "secondary", "displayName": "Forest", "canonical": "#21935b", "tonalRamp": ["#0b2b1b", "#12432b", "#195b3b", "#21734a", "#21935b", "#56b885", "#95d4b2", "#e4f5eb"]},
+      "highlight-yellow": {"role": "tertiary", "displayName": "Marker Yellow", "canonical": "#fecc33", "tonalRamp": ["#40320b", "#6a5211", "#947417", "#b99422", "#d8b832", "#fecc33", "#ffe07a", "#fff5cf"]},
+      "ember": {"role": "tertiary", "displayName": "Ember", "canonical": "#ff8400", "tonalRamp": ["#3c1e02", "#6a3300", "#994a00", "#cc6200", "#e67600", "#ff8400", "#ffa64d", "#ffdab3"]},
+      "ink-hover": {"role": "neutral", "displayName": "Ink Hover", "canonical": "#303030", "tonalRamp": ["#262626", "#303030", "#444444", "#555555", "#777777", "#999999", "#cccccc", "#f5f5f5"]},
+      "control-wash": {"role": "neutral", "displayName": "Control Wash", "canonical": "rgba(255,255,255,.78)", "tonalRamp": ["#262626", "#353535", "#444444", "#555555", "#777777", "#999999", "#cccccc", "#ffffff"]},
+      "chart-gap-wash": {"role": "primary", "displayName": "Gap Area Wash", "canonical": "rgba(48,168,29,.16)", "tonalRamp": ["#0e2e10", "#164b13", "#206f18", "#30a81d", "#56c24b", "#83d67c", "#b5e9ae", "#e7f8e5"]}
+    },
+    "typographyMeta": {
+      "display": {"displayName": "Sketchpad Display", "purpose": "Large hero title and section hierarchy."},
+      "body": {"displayName": "Plainspoken Body", "purpose": "Readable explanations and analysis notes."},
+      "label": {"displayName": "Tracked Mono Annotation", "purpose": "Uppercase field labels, navigation context, and compact readouts."}
+    },
+    "shadows": [],
+    "motion": [],
+    "breakpoints": [
+      {"name": "tablet", "value": "900px"},
+      {"name": "mobile", "value": "700px"}
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Download Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The single filled action downloads the current comparison as CSV.",
+      "html": "<button class=\"ds-button-primary\">DOWNLOAD CSV</button>",
+      "css": ".ds-button-primary { background: var(--ink); color: var(--paper); padding: 0.65rem 1.15rem; border: 1px solid var(--ink); border-radius: 8px; font: 400 12px/1.2 'IBM Plex Mono', ui-monospace, monospace; letter-spacing: 0.06em; text-transform: uppercase; } .ds-button-primary:hover { background: var(--ink-hover); border-color: var(--ink-hover); } .ds-button-primary:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }"
+    },
+    {
+      "name": "Filter Select",
+      "kind": "input",
+      "refersTo": "filter-pill",
+      "description": "Pill-shaped select fields sit inside the comparison controls.",
+      "html": "<label class=\"ds-filter-label\">COUNTRY<select class=\"ds-filter-pill\"><option>India</option></select></label>",
+      "css": ".ds-filter-label { display: grid; gap: 0.4rem; color: var(--ink); font: 400 12px/1.2 'IBM Plex Mono', ui-monospace, monospace; letter-spacing: 0.06em; text-transform: uppercase; } .ds-filter-pill { width: 100%; padding: 0.7rem 1rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--hairline); border-radius: 160px; font: 400 15px/1.4 Arial, Helvetica, sans-serif; } .ds-filter-pill:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }"
+    },
+    {
+      "name": "Context Navigation",
+      "kind": "nav",
+      "description": "A two-sided label rail identifies the explorer and comparison context.",
+      "html": "<nav class=\"ds-context-nav\"><span>DEVELOPMENT DIVERGENCE EXPLORER</span><span>WORLD BANK / PEER COMPARISON</span></nav>",
+      "css": ".ds-context-nav { display: flex; justify-content: space-between; gap: 1rem; padding: 0.5rem 0 1rem; color: var(--ink); border-bottom: 1px solid var(--hairline); font: 400 12px/1 'IBM Plex Mono', ui-monospace, monospace; letter-spacing: 0.06em; text-transform: uppercase; }"
+    },
+    {
+      "name": "Analysis Card",
+      "kind": "card",
+      "refersTo": "chart-card",
+      "description": "A white, hairline-framed surface contains a real chart or data table.",
+      "html": "<section class=\"ds-analysis-card\"><h2>Country trajectory</h2><p>Selected country and matched peer mean</p></section>",
+      "css": ".ds-analysis-card { padding: 0.5rem 0.55rem; color: var(--ink); background: var(--paper); border: 1px solid var(--hairline); border-radius: 16px; } .ds-analysis-card h2 { margin: 0; font: 500 1.7rem/1.1 'Schibsted Grotesk', Arial, sans-serif; letter-spacing: -0.02em; } .ds-analysis-card p { font: 400 15px/1.4 Arial, Helvetica, sans-serif; }"
+    },
+    {
+      "name": "Gap Stability Tag",
+      "kind": "chip",
+      "description": "A compact mono annotation frames overlap and resampled stability values.",
+      "html": "<span class=\"ds-stability-tag\">RESAMPLED PEER STABILITY <strong>82%</strong></span>",
+      "css": ".ds-stability-tag { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--ink); font: 400 12px/1.5 'IBM Plex Mono', ui-monospace, monospace; letter-spacing: 0.06em; } .ds-stability-tag strong { padding: 0.25rem 0.55rem; border: 1px solid var(--green); border-radius: 160px; font-weight: 500; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Scattered Polaroids on a Sketchpad Grid.",
+    "overview": "The dashboard treats a country comparison as an object on a shared working surface. A quiet graph-paper canvas holds the controls, readouts, charts, and tables; the chart surfaces are rounded and hairline-bordered, like analysis cards placed on paper. Charts and data remain the main visual material, so the board supports exploration without decorative photography.\n\nThe interface carries the Flim reference into an analytical tool: near-black type, mono annotations, a large restrained display title, and small purposeful accents. It uses a continuous light canvas rather than alternating bands or a rigid dashboard tile grid. The comparison controls sit together, then the result moves from a wide trajectory to the relative gap and peer set. The explanatory caveats stay available beside the analysis.",
+    "keyCharacteristics": ["A visible graph-paper canvas with a 36px grid.", "Large, mid-weight display type balanced by tracked mono labels.", "White chart and table surfaces with fine borders and rounded corners.", "Green, yellow, and ember accents reserved for data, highlights, and state.", "Flat construction; no drop shadows."],
+    "rules": [
+      {"name": "The Signal Rule", "body": "Green and ember identify information in the analysis; they do not become large decorative surfaces.", "section": "colors"},
+      {"name": "The Three-Voice Rule", "body": "Reserve the display face for hierarchy, Arial for reading, and mono for annotations.", "section": "typography"},
+      {"name": "The Paper Rule", "body": "Never add a drop shadow; borders and surface contrast carry depth.", "section": "elevation"}
+    ],
+    "dos": ["Keep the light grid visible as the dashboard's working surface.", "Use chart color consistently so selected-country and peer series remain distinguishable.", "Keep data provenance, coverage, and interpretation caveats easy to find.", "Let chart and table content serve as the dashboard's primary imagery.", "Preserve responsive reading order and keyboard-visible focus."],
+    "donts": ["Don't add drop shadows or gradients.", "Don't turn every section into a repeated, equal-size tile.", "Don't use accent colors as large background fills.", "Don't use decorative photography behind charts or controls.", "Don't hide the synthetic-data label or the descriptive-only caveat."]
+  }
+}
